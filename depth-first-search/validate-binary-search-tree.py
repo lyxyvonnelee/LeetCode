@@ -5,20 +5,18 @@
 #         self.left = left
 #         self.right = right
 class Solution:
-    def __init__(self):
-        self.pre = None
-
     def isValidBST(self, root: Optional[TreeNode]) -> bool:
-        if not root:
-            return True
-                
-        left = self.isValidBST(root.left)       
-        if self.pre and self.pre.val >= root.val:
-            return False
-        self.pre = root
-        right = self.isValidBST(root.right)
-
-        return left and right
-
-
         
+        def validate(node, low=float('-inf'), high=float('inf')):
+            if not node:
+                return True
+
+            if not (low < node.val < high):
+                return False
+
+            left = validate(node.left, low, node.val)
+            right = validate(node.right, node.val, high)
+
+            return left and right
+
+        return validate(root)
