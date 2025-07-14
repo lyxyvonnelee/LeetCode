@@ -5,21 +5,23 @@
 #         self.left = left
 #         self.right = right
 class Solution:
-    def __init__(self):
-        self.pre = None
-        self.result = float('inf')
-
     def getMinimumDifference(self, root: Optional[TreeNode]) -> int:
-        self.dfs(root)
-        return self.result
-    
-    def dfs(self, cur):
-        if not cur:
-            return
+        self.minDiff = float('inf')
+        self.prev = None
         
-        left = self.dfs(cur.left)
-        if self.pre:
-            self.result = min(self.result, abs(cur.val-self.pre.val))
-        self.pre = cur
+        def inOrder(node):
+            if not node:
+                return
+            
+            inOrder(node.left)
 
-        right = self.dfs(cur.right)
+            if self.prev:
+                self.minDiff = min(self.minDiff, abs(node.val - self.prev))
+            self.prev = node.val
+
+            inOrder(node.right)
+
+            return 
+
+        inOrder(root)
+        return self.minDiff
