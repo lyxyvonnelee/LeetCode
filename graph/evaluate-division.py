@@ -3,27 +3,25 @@ class Solution:
         self, equations: List[List[str]], values: List[float], queries: List[List[str]]
     ) -> List[float]:
         graph = defaultdict(dict)
-        for (a, b), weight in zip(equations, values):
-            graph[a][b] = weight
-            graph[b][a] = 1 / weight
+        for (a, b), val in zip(equations, values):
+            graph[a][b] = val
+            graph[b][a] = 1 / val
 
-        def dfs(a, b, visited):
-            if a not in graph or b not in graph:
+        def dfs(start, end, visited):
+            if start not in graph or end not in graph:
                 return -1.0
-
-            if a == b:
+            if start == end:
                 return 1.0
 
-            visited.add(a)
-            for neighbor, value in graph[a].items():
-                if neighbor not in visited:
-                    result = dfs(neighbor, b, visited)
-                    if result != -1.0:
-                        return result * value
+            visited.add(start)
+            for neighbor, val in graph[start].items():
+                if neighbor in visited:
+                    continue
+
+                result = dfs(neighbor, end, visited)
+                if result != -1.0:
+                    return result * val
+
             return -1.0
 
-        result = []
-        for a, b in queries:
-            result.append(dfs(a, b, set()))
-
-        return result
+        return [dfs(a, b, set()) for a, b in queries]
