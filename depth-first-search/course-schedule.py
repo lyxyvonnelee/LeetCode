@@ -1,24 +1,30 @@
 class Solution:
     def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
-        adj_list = defaultdict(list)
-        for dst, src in prerequisites:
-            adj_list[src].append(dst)
-        state = [0] * numCourses
+        graph = defaultdict(list)
+
+        for course, pre in prerequisites:
+            graph[course].append(pre)
+
+        visiting = set()
+        visited = set()
 
         def dfs(course):
-            if state[course] == 1:
+            if course in visiting:
                 return False
-            if state[course] == 2:
+            if course in visited:
                 return True
 
-            state[course] = 1
-            for c in adj_list[course]:
-                if not dfs(c):
+            visiting.add(course)
+            for pre in graph[course]:
+                if not dfs(pre):
                     return False
-            state[course] = 2
+            visiting.remove(course)
+            visited.add(course)
             return True
-        
+
         for i in range(numCourses):
             if not dfs(i):
                 return False
+        
         return True
+            
