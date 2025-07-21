@@ -1,21 +1,31 @@
 class Solution:
     def findOrder(self, numCourses: int, prerequisites: List[List[int]]) -> List[int]:
-        res = []
-        courses = defaultdict(list)
-        pre = [0] * numCourses
+        graph = defaultdict(list)
+        for a, b in prerequisites:
+            graph[a].append(b)
 
-        for dst, src in prerequisites:
-            courses[src].append(dst)
-            pre[dst] += 1
+        visited = set()
+        visiting = set()
+        result = []
 
-        queue = deque([i for i in range(numCourses) if pre[i] == 0])
-        while queue:
-            node = queue.popleft()
-            res.append(node)
+        def dfs(course):
+            if course in visiting:
+                return False
+            if course in visited:
+                return True
 
-            for neighbor in courses[node]:
-                pre[neighbor] -= 1
-                if pre[neighbor] == 0:
-                    queue.append(neighbor)
-        
-        return res if len(res) == numCourses else []
+            visiting.add(course)
+            for c in graph[course]:
+                if not dfs(c):
+                    return False
+                   
+            visiting.remove(course)
+            visited.add(course)
+            result.append(course)
+            return True
+
+        for i in range(numCourses):
+            if not dfs(i):
+                return []
+
+        return result
