@@ -8,6 +8,7 @@ class Solution:
                 continue
             if nums[i] > 0:
                 break
+
             l, r = i + 1, len(nums) - 1
             target = -nums[i]
             while l < r:
@@ -15,7 +16,7 @@ class Solution:
                 if cur == target:
                     result.append([nums[i], nums[l], nums[r]])
                     l += 1
-                    while l < r and nums[l] == nums[l + 1]:
+                    while l < r and nums[l] == nums[l - 1]:
                         l += 1
                 elif cur > target:
                     r -= 1
