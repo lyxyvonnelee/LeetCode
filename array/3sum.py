@@ -4,7 +4,9 @@ class Solution:
         result = []
 
         for i in range(len(nums) - 1):
-            if nums[i] > 0 or (i > 0 and nums[i] == nums[i - 1]):
+            if i > 0 and nums[i] == nums[i - 1]:
+                continue
+            if nums[i] > 0:
                 break
             l, r = i + 1, len(nums) - 1
             target = -nums[i]
